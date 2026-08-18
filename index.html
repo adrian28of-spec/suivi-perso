@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Suivi Administratif 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0F1117;
+  --ink2: #3D4152;
+  --ink3: #717585;
+  --rule: #E8EAF0;
+  --rule2: #D0D3DF;
+  --bg: #F5F6FA;
+  --surface: #FFFFFF;
+  --accent: #2563EB;
+  --accent-l: #EEF3FF;
+  --green: #059669;
+  --green-l: #ECFDF5;
+  --amber: #D97706;
+  --amber-l: #FFFBEB;
+  --red: #DC2626;
+  --red-l: #FEF2F2;
+  --purple: #7C3AED;
+  --purple-l: #F5F3FF;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Header ── */
+.header {
+  background: var(--ink);
+  color: #fff;
+  padding: 0 1.25rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.header-sub { font-size: 11px; color: #8B93A7; font-family: 'DM Mono', monospace; }
+.sync-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sync-btn:active { opacity: 0.7; }
+.sync-status {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.08);
+  color: #C7CCDA;
+  white-space: nowrap;
+}
+.sync-status[data-state="ok"]   { color: #6EE7B7; }
+.sync-status[data-state="sync"] { color: #FCD34D; }
+.sync-status[data-state="off"]  { color: #FCA5A5; }
+.sync-status[data-state="cfg"]  { color: #C7CCDA; }
+
+/* ── Nav tabs ── */
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 56px;
+  z-index: 99;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav-tab {
+  flex: none;
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink3);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── Main ── */
+.main { padding: 1.25rem; max-width: 960px; margin: 0 auto; }
+
+/* ── Sections ── */
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── Cards ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink2);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── KPI Grid ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+.kpi-label { font-size: 11px; font-weight: 500; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.kpi-value { font-size: 26px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; }
+.kpi-sub { font-size: 11px; color: var(--ink3); margin-top: 4px; }
+.blue { color: var(--accent); }
+.green { color: var(--green); }
+.amber { color: var(--amber); }
+.red { color: var(--red); }
+.purple { color: var(--purple); }
+
+/* ── Task Form ── */
+.task-form-header {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding: 0 4px;
+}
+@media (min-width: 640px) {
+  .task-form-header { grid-template-columns: 120px 1fr 60px 80px 90px 100px 36px; }
+}
+.col-lbl { font-size: 11px; font-weight: 500; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.task-row {
+  display: grid;
+  gap: 8px;
+  align-items: start;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 10px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s;
+}
+@media (min-width: 640px) {
+  .task-row { grid-template-columns: 110px 1fr 52px 122px 92px 104px 30px 28px 30px; align-items: center; padding: 8px 10px; }
+}
+.task-row.done { border-color: #A7F3D0; background: #F0FDF9; }
+.task-row.inprog { border-color: #FDE68A; background: #FFFDF0; }
+
+/* ── Courriers ── */
+.courrier-row {
+  display: grid; gap: 8px; align-items: start;
+  background: var(--surface); border: 1px solid var(--rule);
+  border-left: 3px solid var(--rule2);
+  border-radius: var(--radius); padding: 10px; margin-bottom: 8px;
+  box-shadow: var(--shadow);
+}
+@media (min-width: 640px) {
+  .courrier-row { grid-template-columns: 1fr 160px 190px 36px; align-items: center; padding: 8px 10px; }
+}
+.courrier-row.goal-green  { border-left-color: var(--green); background: #F0FDF4; }
+.courrier-row.goal-orange { border-left-color: var(--amber); background: #FFFBEB; }
+.courrier-row.goal-red    { border-left-color: var(--red);   background: #FEF2F2; }
+
+/* ── Courriers en attente sur le tableau de bord ── */
+.dbc-card { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 14px; }
+.dbc-title { font-weight: 600; font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.dbc-count { background: #FEF2F2; color: var(--red); font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 20px; }
+.dbc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius-sm); cursor: pointer; border-left: 3px solid var(--rule2); }
+.dbc-item + .dbc-item { margin-top: 6px; }
+.dbc-item:hover { filter: brightness(0.98); }
+.dbc-item.goal-green  { border-left-color: var(--green); background: #F0FDF4; }
+.dbc-item.goal-orange { border-left-color: var(--amber); background: #FFFBEB; }
+.dbc-item.goal-red    { border-left-color: var(--red);   background: #FEF2F2; }
+.dbc-name { flex: 1; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dbc-ech { font-size: 12px; font-family: 'DM Mono', monospace; font-weight: 600; white-space: nowrap; }
+.dbc-go { color: var(--ink3); font-size: 18px; }
+
+/* Mobile labels */
+.mob-label { font-size: 10px; color: var(--ink3); font-weight: 500; display: block; margin-bottom: 2px; }
+@media (min-width: 640px) { .mob-label { display: none; } }
+
+input[type="date"], input[type="text"], input[type="number"], select, textarea {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--rule2);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  background: #fff;
+}
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23717585' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px; }
+
+.btn-del {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--rule2);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--ink3);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.btn-del:hover, .btn-del:active { background: var(--red-l); border-color: var(--red); color: var(--red); }
+
+.btn-add {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-top: 4px;
+}
+.btn-add:active { opacity: 0.85; }
+
+/* ── Progress bar ── */
+.prog-wrap { position: relative; }
+.prog-input {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--rule);
+  outline: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin-top: 6px;
+}
+.prog-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.prog-val { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink2); text-align: center; margin-top: 2px; }
+
+/* ── Detail rows ── */
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.detail-item:last-child { border-bottom: none; }
+.detail-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.detail-icon.done { background: var(--green-l); color: var(--green); }
+.detail-icon.inprog { background: var(--amber-l); color: var(--amber); }
+.detail-icon.notstart { background: var(--red-l); color: var(--red); }
+.detail-name { flex: 1; font-size: 13px; font-weight: 500; }
+.detail-sub { font-size: 11px; color: var(--ink3); }
+.detail-pct { font-size: 13px; font-weight: 600; font-family: 'DM Mono', monospace; }
+.mini-bar { height: 4px; border-radius: 2px; background: var(--rule); overflow: hidden; margin-top: 4px; }
+.mini-fill { height: 100%; border-radius: 2px; }
+
+/* ── Period blocks ── */
+.period-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.period-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+.period-header.current { background: linear-gradient(135deg, var(--accent-l), var(--surface)); border-left: 3px solid var(--accent); }
+.period-label { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.period-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--accent); color: #fff; }
+.period-stats { display: flex; gap: 16px; }
+.period-stat { text-align: center; }
+.period-stat-val { font-size: 16px; font-weight: 600; line-height: 1; }
+.period-stat-lbl { font-size: 10px; color: var(--ink3); }
+.period-body { padding: 12px 16px; display: none; }
+.period-body.open { display: block; }
+.period-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.period-meta-item { font-size: 12px; color: var(--ink3); display: flex; align-items: center; gap: 4px; }
+.period-meta-val { font-weight: 500; color: var(--ink2); }
+
+/* ── Stats row ── */
+.stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 12px; }
+.stat-mini { text-align: center; background: var(--bg); border-radius: var(--radius-sm); padding: 8px 4px; }
+.stat-mini-val { font-size: 15px; font-weight: 600; }
+.stat-mini-lbl { font-size: 10px; color: var(--ink3); }
+
+/* ── Priority badge ── */
+.prio-h { color: var(--red); font-weight: 600; font-size: 12px; }
+.prio-m { color: var(--amber); font-weight: 600; font-size: 12px; }
+.prio-f { color: var(--green); font-weight: 600; font-size: 12px; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--ink);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 999;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Empty state ── */
+.empty { text-align: center; padding: 3rem 1rem; color: var(--ink3); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-text { font-size: 14px; }
+
+/* ── Objectifs de temps ── */
+.period-header.goal-green { background: #D1FAE5; border-left: 3px solid #047857; }
+.period-header.goal-greenlight { background: #F0FDF4; border-left: 3px solid #6EE7B7; }
+.period-header.goal-orange { background: #FFFBEB; border-left: 3px solid var(--amber); }
+.period-header.goal-red   { background: #FEF2F2; border-left: 3px solid var(--red); }
+.period-header.current.goal-green  { background: linear-gradient(135deg,#D1FAE5,var(--surface)); border-left: 3px solid #047857; }
+.period-header.current.goal-greenlight { background: linear-gradient(135deg,#F0FDF4,var(--surface)); border-left: 3px solid #6EE7B7; }
+.period-header.current.goal-orange { background: linear-gradient(135deg,#FFFBEB,var(--surface)); border-left: 3px solid var(--amber); }
+.period-header.current.goal-red    { background: linear-gradient(135deg,#FEF2F2,var(--surface)); border-left: 3px solid var(--red); }
+
+/* ── Bouton supprimer ── */
+.btn-del {
+  background: none; border: none; color: var(--ink3);
+  font-size: 14px; cursor: pointer; padding: 4px 6px;
+  border-radius: var(--radius-sm); transition: all 0.15s; flex-shrink:0;
+}
+.btn-del:hover { color: var(--red); background: var(--red-l); }
+.btn-del[data-confirm="1"] { background: var(--red); color: #fff; font-size:11px; font-weight:600; padding: 4px 8px; border-radius: 20px; }
+
+/* ── Historique de progression ── */
+.task-item { display: flex; flex-direction: column; }
+.btn-hist {
+  background: none; border: none; color: var(--ink3);
+  font-size: 12px; cursor: pointer; padding: 4px 6px;
+  border-radius: var(--radius-sm); flex-shrink:0; white-space:nowrap;
+}
+.btn-hist:hover { color: var(--accent); background: var(--accent-l); }
+.btn-comp {
+  background: none; border: none; color: var(--accent);
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  padding: 4px 6px; border-radius: var(--radius-sm); flex-shrink: 0;
+}
+.btn-comp:hover { background: var(--accent-l); }
+.task-history {
+  background: var(--bg); border: 1px solid var(--rule);
+  border-radius: var(--radius-sm); margin: -2px 0 10px; padding: 10px 14px;
+}
+.hist-title { font-size: 11px; font-weight: 600; color: var(--ink3); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px; }
+.hist-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-top: 1px solid var(--rule); font-size: 13px; }
+.hist-row:first-of-type { border-top: none; }
+.hist-date { font-family: 'DM Mono', monospace; color: var(--ink2); min-width: 48px; }
+.hist-pct  { font-weight: 600; color: var(--accent); min-width: 42px; }
+.hist-note { flex: 1; color: var(--ink2); }
+.hist-time { font-family: 'DM Mono', monospace; color: var(--purple,#7C3AED); min-width: 64px; cursor: pointer; }
+.hist-time:hover { text-decoration: underline; }
+.duree-auto { font-size: 13px; color: var(--ink2); font-family: 'DM Mono', monospace; }
+.duree-auto-lbl { color: var(--ink3); font-size: 11px; }
+.prog-arrow { font-size: 0.5em; vertical-align: middle; margin-left: 4px; }
+.prog-arrow.up { color: #059669; }
+.prog-arrow.down { color: #DC2626; }
+.prog-arrow.flat { color: var(--ink3); }
+
+/* ── Molettes de temps ── */
+.time-wheels { display: flex; align-items: center; gap: 4px; }
+.time-wheels select {
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  padding: 6px 4px; border: 1px solid var(--rule); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink); text-align: center; min-width: 46px;
+}
+.time-wheels .tw-sep { font-size: 12px; color: var(--ink3); }
+.time-wheels.big select { font-size: 20px; padding: 10px 8px; min-width: 72px; }
+.tmodal { position: fixed; inset: 0; background: rgba(15,17,23,0.45); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.tmodal[hidden] { display: none; }
+.tmodal-box { background: var(--surface); border-radius: var(--radius); padding: 22px; box-shadow: 0 12px 40px rgba(0,0,0,.25); text-align: center; min-width: 260px; }
+.tmodal-title { font-weight: 600; font-size: 15px; margin-bottom: 16px; }
+.tmodal-box .time-wheels { justify-content: center; margin-bottom: 18px; gap: 8px; }
+.tmodal-actions { display: flex; gap: 10px; justify-content: center; }
+.tmodal-btn { padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--rule); background: var(--surface); color: var(--ink); font-size: 14px; cursor: pointer; }
+.tmodal-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.hist-add  { color: var(--ink3); cursor: pointer; font-style: italic; }
+.hist-add:hover { color: var(--accent); }
+.hist-btn  { background: none; border: none; color: var(--ink3); cursor: pointer; font-size: 12px; padding: 2px 5px; border-radius: 4px; }
+.hist-btn:hover { color: var(--ink); background: var(--rule); }
+.hist-empty { font-size: 12px; color: var(--ink3); font-style: italic; }
+
+/* ── Détail cliquable (tableau de bord & périodes) ── */
+.kpi.clickable, .stat-mini.clickable, .detail-item.clickable { cursor: pointer; }
+.kpi.clickable { transition: box-shadow .15s ease; }
+.kpi.clickable:hover { box-shadow: 0 2px 12px rgba(15,17,23,.08); }
+.kpi.active { box-shadow: 0 0 0 2px var(--accent) inset; }
+.stat-mini.clickable { transition: background .12s ease; border-radius: var(--radius-sm); }
+.stat-mini.clickable:hover { background: var(--bg); }
+.stat-detail { margin-top: 6px; }
+.kpi-detail { margin: 4px 0 14px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: 4px 10px; }
+.detail-item.clickable { border-radius: var(--radius-sm); transition: background .12s ease; }
+.detail-item.clickable:hover { background: var(--bg); }
+.detail-go { color: var(--ink3); font-size: 18px; flex-shrink: 0; padding-left: 4px; }
+.detail-empty { font-size: 13px; color: var(--ink3); padding: 8px 2px; }
+@keyframes flashRing { 0%, 65% { box-shadow: 0 0 0 3px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.task-item.flash > .task-row { animation: flashRing 1.8s ease; border-radius: var(--radius-sm); }
+
+/* ── Décompte objectif (reste / validé / fait) ── */
+.goal-line { margin: 2px 0 10px; }
+.goal-badge { font-size: 12px; font-family: 'DM Mono', monospace; padding: 4px 10px; border-radius: 20px; display: inline-block; }
+.goal-badge.ok   { background: #F0FDF4; color: #059669; }
+.goal-badge.todo { background: #EFF6FF; color: var(--accent); }
+.goal-badge.miss { background: var(--bg); color: var(--ink2); }
+.goal-cover { color: #059669; }
+.bank-line { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--ink2); padding: 6px 2px 2px; }
+.bank-pos { color: #059669; } .bank-zero { color: var(--ink3); }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--rule2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<style>
+#login-screen {
+  position: fixed; inset: 0; background: #0F1117;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+.login-box {
+  background: #1A1D27; border: 1px solid #2A2D3A;
+  border-radius: 16px; padding: 2.5rem 2rem; width: 300px; max-width: 90vw;
+  text-align: center;
+}
+.login-logo { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.login-sub { font-size: 12px; color: #4B5268; margin-bottom: 2rem; }
+.pin-label { font-size: 11px; font-weight: 500; color: #8B93A7; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+.pin-dots { display: flex; justify-content: center; gap: 12px; margin-bottom: 2rem; }
+.pin-dot { width: 14px; height: 14px; border-radius: 50%; background: #2A2D3A; border: 2px solid #3A3D4A; transition: all 0.15s; }
+.pin-dot.filled { background: #2563EB; border-color: #2563EB; }
+.pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pin-btn {
+  background: #2A2D3A; border: 1px solid #3A3D4A; color: #fff;
+  border-radius: 10px; padding: 16px; font-size: 20px; font-weight: 500;
+  font-family: 'DM Mono', monospace; cursor: pointer;
+  transition: all 0.1s; -webkit-tap-highlight-color: transparent;
+}
+.pin-btn:active { background: #2563EB; border-color: #2563EB; transform: scale(0.94); }
+.pin-btn.del { font-size: 16px; color: #8B93A7; }
+.pin-btn.empty { background: none; border: none; cursor: default; }
+.pin-error { font-size: 12px; color: #EF4444; margin-top: 12px; min-height: 18px; }
+</style>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Suivi Admin</div>
+    <div class="login-sub">Accès privé · 2026</div>
+    <div class="pin-label">Code PIN</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-grid">
+      <button class="pin-btn" onclick="pinPress('1')">1</button>
+      <button class="pin-btn" onclick="pinPress('2')">2</button>
+      <button class="pin-btn" onclick="pinPress('3')">3</button>
+      <button class="pin-btn" onclick="pinPress('4')">4</button>
+      <button class="pin-btn" onclick="pinPress('5')">5</button>
+      <button class="pin-btn" onclick="pinPress('6')">6</button>
+      <button class="pin-btn" onclick="pinPress('7')">7</button>
+      <button class="pin-btn" onclick="pinPress('8')">8</button>
+      <button class="pin-btn" onclick="pinPress('9')">9</button>
+      <button class="pin-btn empty"></button>
+      <button class="pin-btn" onclick="pinPress('0')">0</button>
+      <button class="pin-btn del" onclick="pinDel()">⌫</button>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+  </div>
+</div>
+
+<script>
+let pinVal = '';
+const TARGET = hashPin('6350');
+
+function hashPin(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+  return Math.abs(h).toString(16);
+}
+
+function pinPress(d) {
+  if (pinVal.length >= 4) return;
+  pinVal += d;
+  updateDots();
+  if (pinVal.length === 4) setTimeout(checkPin, 120);
+}
+
+function pinDel() {
+  pinVal = pinVal.slice(0, -1);
+  document.getElementById('pin-error').textContent = '';
+  updateDots();
+}
+
+function updateDots() {
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('d'+i).classList.toggle('filled', i < pinVal.length);
+  }
+}
+
+function checkPin() {
+  if (hashPin(pinVal) === TARGET) {
+    document.getElementById('login-screen').style.display = 'none';
+    sessionStorage.setItem('auth', TARGET);
+  } else {
+    document.getElementById('pin-error').textContent = 'Code incorrect';
+    pinVal = '';
+    updateDots();
+    // Shake animation
+    const box = document.querySelector('.pin-dots');
+    box.style.animation = 'shake 0.3s';
+    setTimeout(() => box.style.animation = '', 300);
+  }
+}
+
+if (sessionStorage.getItem('auth') === TARGET) {
+  document.getElementById('login-screen').style.display = 'none';
+}
+</script>
+
+<style>
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+</style>
+
+<header class="header">
+  <div>
+    <div class="header-title">Suivi Admin</div>
+    <div class="header-sub">2026 · <span id="today-label"></span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span id="sync-status" class="sync-status" data-state="cfg" onclick="openTokenDialog()" title="Connecter / changer le token GitHub" style="cursor:pointer">⚙︎ Connecter</span>
+    <button class="sync-btn" onclick="exportData()">↓ Export</button>
+  </div>
+</header>
+
+<nav class="nav">
+  <button class="nav-tab active" onclick="showTab('dashboard',this)">Tableau de bord</button>
+  <button class="nav-tab" onclick="showTab('quotidien',this)">Quotidien</button>
+  <button class="nav-tab" onclick="showTab('hebdo',this)">Hebdomadaire</button>
+  <button class="nav-tab" onclick="showTab('mensuel',this)">Mensuel</button>
+  <button class="nav-tab" onclick="showTab('courriers',this)">Courriers</button>
+</nav>
+
+<main class="main">
+
+  <!-- TABLEAU DE BORD -->
+  <section id="dashboard" class="section active">
+    <div class="kpi-grid" id="kpi-grid"></div>
+    <div id="kpi-detail" class="stat-detail kpi-detail" hidden></div>
+    <div id="db-courriers"></div>
+    <div class="card">
+      <div class="card-title">Semaine en cours <span id="week-label" style="font-weight:400;color:var(--ink3);font-family:'DM Mono',monospace;font-size:12px"></span></div>
+      <div id="db-week"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Mois en cours <span id="month-label" style="font-weight:400;color:var(--ink3);font-size:12px"></span></div>
+      <div id="db-month"></div>
+    </div>
+  </section>
+
+  <!-- QUOTIDIEN -->
+  <section id="quotidien" class="section">
+    <div id="task-list"></div>
+    <button class="btn-add" onclick="addTask()">＋ Ajouter une tâche</button>
+  </section>
+
+  <!-- HEBDOMADAIRE -->
+  <section id="hebdo" class="section">
+    <div id="hebdo-list"></div>
+  </section>
+
+  <!-- MENSUEL -->
+  <section id="mensuel" class="section">
+    <div id="mensuel-list"></div>
+  </section>
+
+  <!-- COURRIERS -->
+  <section id="courriers" class="section">
+    <div id="courriers-list"></div>
+    <button class="btn-add" onclick="addCourrier()">＋ Ajouter un courrier</button>
+  </section>
+
+</main>
+
+<div id="toast" class="toast"></div>
+
+<div id="time-modal" class="tmodal" hidden>
+  <div class="tmodal-box">
+    <div class="tmodal-title">Temps passé sur cette session</div>
+    <div class="time-wheels big">
+      <select id="tm-h"></select><span class="tw-sep">h</span>
+      <select id="tm-m"></select><span class="tw-sep">min</span>
+    </div>
+    <div class="tmodal-actions">
+      <button class="tmodal-btn" onclick="closeTimeModal()">Annuler</button>
+      <button class="tmodal-btn primary" onclick="confirmTimeModal()">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Storage ──────────────────────────────────────────────────────────────────
+let _saved = localStorage.getItem('suivi_tasks');
+let courriers = JSON.parse(localStorage.getItem('suivi_courriers') || '[]');
+let tasks = _saved ? JSON.parse(_saved) : [
+  {
+    "id": 3153,
+    "date": "2026-06-02",
+    "intitule": "Colis ALOE perdu",
+    "prio": "M",
+    "duree": "30mn",
+    "prog": 0.3,
+    "statut": "En cours",
+    "detail": "livraison au domicile par la poste, invitation au retrait, jamais déposé aà la poste, aux automate",
+    "comment": "je dois contacter aloé avec le mail de la poste"
+  },
+  {
+    "id": 4154,
+    "date": "2026-06-03",
+    "intitule": "Service social / fin du social",
+    "prio": "H",
+    "duree": "15mn",
+    "prog": 0.5,
+    "statut": "En cours",
+    "detail": "Impression des documents mensuel",
+    "comment": "fin de social, document emploi hôtel, en attente de décision pour le loyer"
+  },
+  {
+    "id": 5155,
+    "date": "2026-06-04",
+    "intitule": "Colis ALOE perdu",
+    "prio": "M",
+    "duree": "30mn",
+    "prog": 0.6,
+    "statut": "En cours",
+    "detail": "Envoie d'un mail de reclamation auprès d'aloé accompagné du mail de la poste attestant la perte de la commande n°: CB515527772FR",
+    "comment": "En attente de la réponse"
+  },
+  {
+    "id": 6156,
+    "date": "2026-06-05",
+    "intitule": "Service social / fin du social",
+    "prio": "H",
+    "duree": "1h",
+    "prog": 1.0,
+    "statut": "Terminé",
+    "detail": "Impression et dépôt des revenus mai 2026. Contrat de travail donc fin de socual",
+    "comment": "Dépôt"
+  },
+  {
+    "id": 7156,
+    "date": "2026-06-05",
+    "intitule": "Colis ALOE perdu",
+    "prio": "M",
+    "duree": "30mn",
+    "prog": 1.0,
+    "statut": "Terminé",
+    "detail": "Colis retrouvé",
+    "comment": "Colis retrouvé"
+  },
+  {
+    "id": 8157,
+    "date": "2026-06-06",
+    "intitule": "Paiements",
+    "prio": "H",
+    "duree": "15mn",
+    "prog": 1.0,
+    "statut": "Terminé",
+    "detail": "Paiement salt Téléphone & Internet",
+    "comment": "mopis de mai payé"
+  }
+];
+
+// ── Synchronisation GitHub Gist ───────────────────────────────────────────────
+// Ni l'identifiant du Gist ni le token ne sont stockés dans ce fichier :
+// les deux sont saisis une fois par appareil via « Connecter » et gardés
+// dans ce navigateur uniquement. Le code public ne révèle donc rien.
+let   GIST_ID      = localStorage.getItem('suivi_gist_id') || '';   // saisi via « Connecter »
+const GIST_FILE    = 'suivi-admin.json';     // nom du fichier dans le Gist
+const POLL_MS      = 20000;                  // rafraîchissement auto (ms)
+let   GITHUB_TOKEN = localStorage.getItem('suivi_gh_token') || '';  // saisi via « Connecter »
+// ──────────────────────────────────────────────────────────────────────────────
+
+let localUpdatedAt = parseInt(localStorage.getItem('suivi_updatedAt') || '0', 10);
+let _pushTimer = null, _pulling = false, _pushing = false, _editing = false, _polling = false;
+
+function gistConfigured() {
+  return GIST_ID && GIST_ID.length > 10 && GITHUB_TOKEN && GITHUB_TOKEN.length > 10;
+}
+
+// Saisie / changement de la connexion (Gist + token), stockée dans ce navigateur uniquement
+function openTokenDialog() {
+  const gid = window.prompt(
+    "1/2 — Identifiant de votre Gist (la longue suite de caractères) :",
+    GIST_ID || ''
+  );
+  if (gid === null) return;                 // annulé
+  const gidv = gid.trim();
+  const tok = window.prompt(
+    "2/2 — Votre token GitHub (commence par ghp_).\n" +
+    "Reste sur cet appareil uniquement, envoyé seulement à GitHub.",
+    GITHUB_TOKEN || ''
+  );
+  if (tok === null) return;                 // annulé
+  const tokv = tok.trim();
+  if (tokv && tokv.length < 10) { alert("Ce token semble trop court."); return; }
+  GIST_ID = gidv;
+  GITHUB_TOKEN = tokv;
+  if (gidv) localStorage.setItem('suivi_gist_id', gidv); else localStorage.removeItem('suivi_gist_id');
+  if (tokv) localStorage.setItem('suivi_gh_token', tokv); else localStorage.removeItem('suivi_gh_token');
+  startSync();
+}
+
+function setSyncStatus(state, label) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  el.dataset.state = state;
+  el.textContent = label;
+}
+
+async function gistPull(isPoll) {
+  if (!gistConfigured() || _pulling) return;
+  _pulling = true;
+  try {
+    const r = await fetch(`https://api.github.com/gists/${GIST_ID}?_=${Date.now()}`, {
+      cache: 'no-store',
+      headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github+json' }
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    const file = data.files && data.files[GIST_FILE];
+    let remote = {};
+    if (file && file.content) { try { remote = JSON.parse(file.content); } catch (_) {} }
+    const rUpdated = remote.updatedAt || 0;
+    const rHasTasks = Array.isArray(remote.tasks);
+
+    if (rHasTasks && rUpdated > localUpdatedAt) {
+      // Version distante plus récente → on l'applique (sauf si édition en cours)
+      if (isPoll && _editing) { setSyncStatus('ok', '✓ à jour'); return; }
+      tasks = remote.tasks;
+      courriers = Array.isArray(remote.courriers) ? remote.courriers : [];
+      localUpdatedAt = rUpdated;
+      localStorage.setItem('suivi_tasks', JSON.stringify(tasks));
+      localStorage.setItem('suivi_courriers', JSON.stringify(courriers));
+      localStorage.setItem('suivi_updatedAt', String(localUpdatedAt));
+      renderAll();
+    } else if (!rHasTasks || localUpdatedAt > rUpdated) {
+      // Gist vide ou version locale plus récente → on (ré)initialise le Gist
+      if (localUpdatedAt === 0) {
+        localUpdatedAt = Date.now();
+        localStorage.setItem('suivi_updatedAt', String(localUpdatedAt));
+      }
+      await gistPush();
+      return;
+    }
+    setSyncStatus('ok', '✓ à jour');
+  } catch (e) {
+    setSyncStatus('off', '⚠︎ hors-ligne');
+  } finally {
+    _pulling = false;
+  }
+}
+
+async function gistPush() {
+  if (!gistConfigured() || _pushing) return;
+  _pushing = true;
+  setSyncStatus('sync', '⏳ envoi…');
+  try {
+    const content = JSON.stringify({ updatedAt: localUpdatedAt, tasks, courriers });
+    const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ files: { [GIST_FILE]: { content } } })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    setSyncStatus('ok', '✓ synchronisé');
+  } catch (e) {
+    setSyncStatus('off', '⚠︎ non envoyé');
+  } finally {
+    _pushing = false;
+  }
+}
+
+function schedulePush() {
+  if (!gistConfigured()) return;
+  setSyncStatus('sync', '⏳ …');
+  clearTimeout(_pushTimer);
+  _pushTimer = setTimeout(gistPush, 1200);
+}
+
+function startSync() {
+  if (!gistConfigured()) { setSyncStatus('cfg', '⚙︎ Connecter'); return; }
+  if (!_polling) {
+    _polling = true;
+    document.addEventListener('focusin', e => {
+      if (e.target.matches('input, select, textarea')) _editing = true;
+    });
+    document.addEventListener('focusout', e => {
+      if (e.target.matches('input, select, textarea')) {
+        _editing = false;
+        setTimeout(() => gistPull(true), 400);
+      }
+    });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) gistPull(true); });
+    setInterval(() => gistPull(true), POLL_MS);
+  }
+  gistPull(false);
+}
+
+function save() {
+  localUpdatedAt = Date.now();
+  localStorage.setItem('suivi_tasks', JSON.stringify(tasks));
+  localStorage.setItem('suivi_courriers', JSON.stringify(courriers));
+  localStorage.setItem('suivi_updatedAt', String(localUpdatedAt));
+  renderAll();
+  schedulePush();
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+// Date du jour au format local YYYY-MM-DD (évite le décalage UTC de toISOString)
+function todayLocal(d) {
+  d = d || new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+const MOIS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+function fmtDateFR(d) {
+  const dt = new Date(d);
+  return dt.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+
+function toDate(d) {
+  const dt = new Date(d); dt.setHours(0,0,0,0); return dt;
+}
+
+function parseDuration(s) {
+  if (!s) return 0;
+  s = String(s).toLowerCase().replace(/\s/g,'');
+  const h = s.match(/(\d+)h(\d+)?/);
+  if (h) return parseInt(h[1])*60 + (h[2] ? parseInt(h[2]) : 0);
+  const m = s.match(/(\d+)m/);
+  if (m) return parseInt(m[1]);
+  const n = s.match(/^(\d+)$/);
+  if (n) return parseInt(n[1]);
+  return 0;
+}
+
+function fmtDuration(min) {
+  if (!min) return '—';
+  const h = Math.floor(min/60); const m = min%60;
+  if (h && m) return h+'h'+String(m).padStart(2,'0');
+  if (h) return h+'h'; return m+'mn';
+}
+
+function progColor(p) {
+  if (p >= 1) return 'var(--green)';
+  if (p >= 0.67) return '#16A34A';
+  if (p >= 0.33) return 'var(--amber)';
+  return 'var(--red)';
+}
+
+function progClass(p) {
+  if (p >= 1) return 'done';
+  if (p > 0) return 'inprog';
+  return 'notstart';
+}
+
+function getISOWeek(d) {
+  const dt = new Date(d); dt.setHours(0,0,0,0);
+  dt.setDate(dt.getDate() + 3 - (dt.getDay()+6)%7);
+  const w1 = new Date(dt.getFullYear(),0,4);
+  return 1 + Math.round(((dt-w1)/86400000 - 3 + (w1.getDay()+6)%7)/7);
+}
+
+function getWeekRange(year, wk) {
+  const jan4 = new Date(year,0,4);
+  const mon = new Date(jan4);
+  mon.setDate(jan4.getDate() - (jan4.getDay()+6)%7 + (wk-1)*7);
+  const sun = new Date(mon); sun.setDate(mon.getDate()+6);
+  return {mon, sun};
+}
+
+function getUnique(from, to) {
+  const bucket = {};
+  for (const t of tasks) {
+    if (!t.intitule || !t.date) continue;
+    const d = toDate(t.date);
+    if (d < from || d > to) continue;
+    const k = t.intitule.trim().toLowerCase();
+    if (!bucket[k] || (t.prog||0) > (bucket[k].prog||0)) bucket[k] = t;
+  }
+  return Object.values(bucket).sort((a,b) => (b.prog||0)-(a.prog||0));
+}
+
+// Minutes effectives d'une tâche : somme des sessions si on en a saisi, sinon la durée unique
+function taskHasSessions(t) {
+  return Array.isArray(t.history) && t.history.some(h => (h.mins||0) > 0);
+}
+function taskTotalMins(t) {
+  const sess = Array.isArray(t.history) ? t.history.reduce((s,h) => s + (h.mins||0), 0) : 0;
+  return parseDuration(t.duree) + sess;
+}
+
+function getTotalTime(from, to) {
+  let total = 0;
+  for (const t of tasks) {
+    // temps de base (case Durée), rattaché à la date de la tâche
+    const base = parseDuration(t.duree);
+    if (base > 0 && t.date && toDate(t.date) >= from && toDate(t.date) <= to) total += base;
+    // sessions de l'horloge, chacune rattachée à sa propre date
+    if (Array.isArray(t.history)) {
+      total += t.history
+        .filter(h => h.date && (h.mins||0) > 0 && toDate(h.date) >= from && toDate(h.date) <= to)
+        .reduce((s,h) => s + h.mins, 0);
+    }
+  }
+  return total;
+}
+
+function periodStats(items, from, to) {
+  const total = items.length;
+  const done = items.filter(t => (t.prog||0) >= 1).length;
+  const ongoing = items.filter(t => (t.prog||0) > 0 && (t.prog||0) < 1).length;
+  const reste = total - done - ongoing;
+  const pct = total > 0 ? Math.round(done/total*100) : null;
+  const time = getTotalTime(from, to);
+  return {total, done, ongoing, reste, pct, time};
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ── Courriers (registre du courrier entrant à traiter) ────────────────────────
+function addCourrier() {
+  const today = todayLocal();
+  courriers.push({ id: Date.now(), intitule: '', saisie: today, echeance: '', statut: 'En attente' });
+  save();
+  toast('Courrier ajouté');
+  setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 100);
+}
+
+function updateCourrier(id, field, value) {
+  const c = courriers.find(c => c.id === id);
+  if (!c) return;
+  if (field === 'statut' && value === 'En cours de traitement') {
+    // Bascule : devient une vraie tâche dans le Quotidien (date = aujourd'hui), et quitte les courriers
+    const today = todayLocal();
+    tasks.push({ id: Date.now(), date: today, intitule: c.intitule || '(courrier)', prio: 'M', duree: '', prog: 0, statut: 'En cours', detail: c.echeance ? ('Date limite courrier : ' + c.echeance) : '' });
+    courriers = courriers.filter(x => x.id !== id);
+    save();
+    toast('Passé en traitement → tâche créée dans le Quotidien');
+    return;
+  }
+  c[field] = value;
+  save();
+}
+
+function deleteCourrier(id, btn) {
+  if (btn.dataset.confirm !== '1') {
+    btn.dataset.confirm = '1'; btn.textContent = 'Supprimer ?';
+    setTimeout(() => { if (btn.dataset.confirm === '1') { btn.dataset.confirm = ''; btn.textContent = '✕'; } }, 2500);
+    return;
+  }
+  courriers = courriers.filter(c => c.id !== id);
+  save();
+  toast('Courrier supprimé');
+}
+
+// Couleur = part du délai restante entre la saisie et l'échéance
+// reste > 2/3 → 🟢 · entre 1/3 et 2/3 → 🟠 · < 1/3 ou dépassé → 🔴
+function courrierGoalClass(c) {
+  if (!c.echeance) return '';
+  const start = toDate(c.saisie || todayLocal());
+  const end = toDate(c.echeance);
+  const now = new Date(); now.setHours(0,0,0,0);
+  if (now >= end) return 'goal-red';
+  const total = end - start;
+  if (total <= 0) return 'goal-red';
+  const frac = (end - now) / total;
+  if (frac > 2/3) return 'goal-green';
+  if (frac > 1/3) return 'goal-orange';
+  return 'goal-red';
+}
+function courrierDaysLeft(c) {
+  if (!c.echeance) return null;
+  const now = new Date(); now.setHours(0,0,0,0);
+  return Math.round((toDate(c.echeance) - now) / 86400000);
+}
+
+function renderCourriers() {
+  const el = document.getElementById('courriers-list');
+  if (!el) return;
+  const list = courriers.slice().sort((a, b) => {
+    if (!a.echeance) return 1; if (!b.echeance) return -1;
+    return toDate(a.echeance) - toDate(b.echeance);
+  });
+  if (!list.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📬</div><div class="empty-text">Aucun courrier en attente. Ajoutez-en un ci-dessous.</div></div>';
+    return;
+  }
+  el.innerHTML = list.map(c => {
+    const cls = courrierGoalClass(c);
+    const dl = courrierDaysLeft(c);
+    let echLbl = 'Date limite';
+    if (dl !== null) echLbl = 'Date limite · ' + (dl < 0 ? `en retard de ${-dl} j` : dl === 0 ? "aujourd'hui" : `dans ${dl} j`);
+    return `<div class="courrier-row ${cls}">
+      <div>
+        <span class="mob-label">Intitulé</span>
+        <input type="text" value="${(c.intitule||'').replace(/"/g,'&quot;')}" placeholder="Intitulé du courrier…" onchange="updateCourrier(${c.id},'intitule',this.value)">
+      </div>
+      <div>
+        <span class="mob-label">${echLbl}</span>
+        <input type="date" value="${c.echeance||''}" onchange="updateCourrier(${c.id},'echeance',this.value)">
+      </div>
+      <div>
+        <span class="mob-label">Statut</span>
+        <select onchange="updateCourrier(${c.id},'statut',this.value)">
+          <option ${c.statut==='En attente'?'selected':''}>En attente</option>
+          <option ${c.statut==='En cours de traitement'?'selected':''}>En cours de traitement</option>
+        </select>
+      </div>
+      <button class="btn-del" onclick="deleteCourrier(${c.id},this)" title="Supprimer">✕</button>
+    </div>`;
+  }).join('');
+}
+
+// ── Task CRUD ─────────────────────────────────────────────────────────────────
+function addTask() {
+  const d = todayLocal();
+  tasks.push({id: Date.now(), date: d, intitule: '', prio: 'M', duree: '', prog: 0, statut: 'En cours', detail: ''});
+  save();
+  toast('Tâche ajoutée');
+  // Scroll to bottom
+  setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 100);
+}
+
+function deleteTask(id, btn) {
+  if (btn.dataset.confirm !== '1') {
+    btn.dataset.confirm = '1';
+    btn.textContent = 'Supprimer ?';
+    setTimeout(() => {
+      if (btn.dataset.confirm === '1') {
+        btn.dataset.confirm = '';
+        btn.textContent = '✕';
+      }
+    }, 2500);
+    return;
+  }
+  tasks = tasks.filter(t => t.id !== id);
+  save();
+  toast('Tâche supprimée');
+}
+
+function updateField(id, field, value) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  const oldPct = Math.round((t.prog||0)*100);
+  if (field === 'prog') {
+    value = Math.min(1, Math.max(0, parseFloat(value)||0));
+    t.prog = value;
+    if (value >= 1) t.statut = 'Terminé';
+    else if (value > 0) t.statut = 'En cours';
+    else t.statut = 'À faire';
+  } else {
+    t[field] = value;
+    if (field === 'statut') {
+      if (value === 'Terminé') t.prog = 1;
+      else if (value === 'En cours' && t.prog >= 1) t.prog = 0.5;
+    }
+  }
+  const newPct = Math.round((t.prog||0)*100);
+  if (newPct !== oldPct) recordProgress(t, newPct);
+  save();
+}
+
+// Journal de progression — auto, un point par jour (le dernier % du jour)
+function recordProgress(t, pct) {
+  if (!Array.isArray(t.history)) t.history = [];
+  const today = todayLocal();
+  const last = t.history[t.history.length - 1];
+  if (last && last.date === today) last.pct = pct;          // même jour → on met à jour
+  else t.history.push({ date: today, pct: pct, note: '' });  // nouveau jour → nouveau point
+}
+
+const _openHistory = new Set();
+
+// « Compléter » : enregistrer une reprise de la tâche aujourd'hui (nouvelle session)
+function completeTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  if (!Array.isArray(t.history)) t.history = [];
+  const today = todayLocal();
+  let idx = t.history.findIndex(h => h.date === today);
+  _openHistory.add(id);
+  if (idx < 0) {
+    t.history.push({ date: today, pct: Math.round((t.prog||0)*100), note: '', mins: 0 });
+    idx = t.history.length - 1;
+    save();                       // enregistre + réaffiche (panneau ouvert)
+  } else {
+    const el = document.getElementById('hist-' + id);
+    if (el) el.hidden = false;
+  }
+  editHistoryTime(id, idx);       // ouvre directement les molettes de temps
+}
+
+function toggleHistory(id) {
+  if (_openHistory.has(id)) _openHistory.delete(id); else _openHistory.add(id);
+  const el = document.getElementById('hist-' + id);
+  if (el) el.hidden = !_openHistory.has(id);
+}
+function editHistoryNote(id, idx) {
+  const t = tasks.find(x => x.id === id);
+  if (!t || !t.history || !t.history[idx]) return;
+  const v = window.prompt("Note pour ce point d'étape :", t.history[idx].note || '');
+  if (v === null) return;
+  t.history[idx].note = v.trim();
+  save();
+}
+// ── Molettes de temps (heures 0-8 / minutes par pas de 5) ─────────────────────
+function hourOpts(sel) {
+  let o = '';
+  for (let i = 0; i <= 8; i++) o += `<option value="${i}"${i===sel?' selected':''}>${i}</option>`;
+  return o;
+}
+function minOpts(sel) {
+  const steps = [0,5,10,15,20,25,30,35,40,45,50,55];
+  if (sel != null && !steps.includes(sel)) steps.push(sel);
+  steps.sort((a,b) => a-b);
+  return steps.map(i => `<option value="${i}"${i===sel?' selected':''}>${String(i).padStart(2,'0')}</option>`).join('');
+}
+function dureeWheels(id, mins) {
+  const h = Math.floor((mins||0)/60), m = (mins||0)%60;
+  return `<div class="time-wheels" id="dur-${id}">
+    <select data-role="h" onchange="updateDuree(${id})">${hourOpts(h)}</select><span class="tw-sep">h</span>
+    <select data-role="m" onchange="updateDuree(${id})">${minOpts(m)}</select><span class="tw-sep">min</span>
+  </div>`;
+}
+function updateDuree(id) {
+  const wrap = document.getElementById('dur-' + id);
+  if (!wrap) return;
+  const h = parseInt(wrap.querySelector('[data-role=h]').value) || 0;
+  const m = parseInt(wrap.querySelector('[data-role=m]').value) || 0;
+  updateField(id, 'duree', fmtDuration(h*60 + m));
+}
+
+// ── Temps d'une session via molettes (petite modale) ─────────────────────────
+let _tmCtx = null;
+function editHistoryTime(id, idx) {
+  const t = tasks.find(x => x.id === id);
+  if (!t || !t.history || !t.history[idx]) return;
+  _tmCtx = { id, idx };
+  const mins = t.history[idx].mins || 0;
+  document.getElementById('tm-h').innerHTML = hourOpts(Math.floor(mins/60));
+  document.getElementById('tm-m').innerHTML = minOpts(mins%60);
+  document.getElementById('time-modal').hidden = false;
+}
+function closeTimeModal() { document.getElementById('time-modal').hidden = true; _tmCtx = null; }
+function confirmTimeModal() {
+  if (!_tmCtx) return;
+  const h = parseInt(document.getElementById('tm-h').value) || 0;
+  const m = parseInt(document.getElementById('tm-m').value) || 0;
+  const t = tasks.find(x => x.id === _tmCtx.id);
+  if (t && t.history && t.history[_tmCtx.idx]) t.history[_tmCtx.idx].mins = h*60 + m;
+  closeTimeModal();
+  save();
+}
+function deleteHistoryEntry(id, idx) {
+  const t = tasks.find(x => x.id === id);
+  if (!t || !t.history) return;
+  t.history.splice(idx, 1);
+  save();
+}
+
+// ── Render Quotidien ──────────────────────────────────────────────────────────
+function renderQuotidien() {
+  const sorted = [...tasks].sort((a,b) => {
+    const ae = !(a.intitule||'').trim(), be = !(b.intitule||'').trim();
+    if (ae !== be) return ae ? 1 : -1;               // lignes vides tout en bas
+    return (new Date(a.date)-new Date(b.date)) || ((a.id||0)-(b.id||0));
+  });
+  const el = document.getElementById('task-list');
+  if (!sorted.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Aucune tâche — cliquez sur Ajouter</div></div>`;
+    return;
+  }
+  el.innerHTML = sorted.map(t => {
+    const p = t.prog || 0;
+    const cls = progClass(p);
+    const pct = Math.round(p*100);
+    const prioClass = t.prio === 'H' ? 'prio-h' : t.prio === 'F' ? 'prio-f' : 'prio-m';
+    const hist = Array.isArray(t.history) ? t.history : [];
+    const open = _openHistory.has(t.id);
+    const histRows = hist.length
+      ? hist.map((h,i) => `<div class="hist-row">
+          <span class="hist-date">${(h.date||'').split('-').reverse().slice(0,2).join('/')}</span>
+          <span class="hist-pct">${h.pct}%</span>
+          <span class="hist-time" onclick="editHistoryTime(${t.id},${i})" title="Temps de cette session">${h.mins ? '⏱ '+fmtDuration(h.mins) : '<span class="hist-add">+ temps</span>'}</span>
+          <span class="hist-note">${h.note ? h.note.replace(/</g,'&lt;') : `<span class="hist-add" onclick="editHistoryNote(${t.id},${i})">+ note</span>`}</span>
+          <button class="hist-btn" onclick="editHistoryNote(${t.id},${i})" title="Modifier la note">✎</button>
+          <button class="hist-btn" onclick="deleteHistoryEntry(${t.id},${i})" title="Supprimer ce point">✕</button>
+        </div>`).join('')
+      : `<div class="hist-empty">Aucun point encore — bougez la progression pour démarrer le journal.</div>`;
+    return `<div class="task-item" id="task-${t.id}">
+    <div class="task-row ${cls}">
+      <div>
+        <span class="mob-label">Date</span>
+        <input type="date" value="${t.date||''}" onchange="updateField(${t.id},'date',this.value)">
+      </div>
+      <div>
+        <span class="mob-label">Intitulé</span>
+        <input type="text" value="${(t.intitule||'').replace(/"/g,'&quot;')}" placeholder="Intitulé de la tâche..." onchange="updateField(${t.id},'intitule',this.value)">
+      </div>
+      <div>
+        <span class="mob-label">Prio</span>
+        <select onchange="updateField(${t.id},'prio',this.value)">
+          <option ${t.prio==='H'?'selected':''}>H</option>
+          <option ${t.prio==='M'?'selected':''}>M</option>
+          <option ${t.prio==='F'?'selected':''}>F</option>
+        </select>
+      </div>
+      <div>
+        <span class="mob-label">Durée</span>
+        ${taskHasSessions(t)
+          ? `<div class="duree-auto" title="Total cumulé : durée de base + sessions">${fmtDuration(taskTotalMins(t))} <span class="duree-auto-lbl">· total</span></div>`
+          : dureeWheels(t.id, parseDuration(t.duree))}
+      </div>
+      <div>
+        <span class="mob-label">Progression — ${pct}%</span>
+        <div class="prog-wrap">
+          <input type="range" class="prog-input" min="0" max="100" value="${pct}"
+            style="background: linear-gradient(to right, ${progColor(p)} ${pct}%, var(--rule) ${pct}%)"
+            oninput="this.style.background='linear-gradient(to right, ${progColor(p)} '+this.value+'%, var(--rule) '+this.value+'%)'; this.nextElementSibling.textContent=this.value+'%'"
+            onchange="updateField(${t.id},'prog',this.value/100)">
+          <div class="prog-val">${pct}%</div>
+        </div>
+      </div>
+      <div>
+        <span class="mob-label">Statut</span>
+        <select onchange="updateField(${t.id},'statut',this.value)">
+          <option ${t.statut==='En cours'?'selected':''}>En cours</option>
+          <option ${t.statut==='Terminé'?'selected':''}>Terminé</option>
+          <option ${t.statut==='À faire'?'selected':''}>À faire</option>
+        </select>
+      </div>
+      <button class="btn-hist" onclick="toggleHistory(${t.id})" title="Journal de progression">🕑${hist.length?` ${hist.length}`:''}</button>
+      <button class="btn-comp" onclick="completeTask(${t.id})" title="Compléter : ajouter le temps fait aujourd'hui"${p >= 1 ? ' style="visibility:hidden;pointer-events:none"' : ''}>＋</button>
+      <button class="btn-del" onclick="deleteTask(${t.id},this)" title="Supprimer">✕</button>
+    </div>
+    <div class="task-history" id="hist-${t.id}" ${open?'':'hidden'}>
+      <div class="hist-title">Journal de progression</div>
+      ${histRows}
+    </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Detail list ───────────────────────────────────────────────────────────────
+function detailHTML(items, opts) {
+  opts = opts || {};
+  if (!items.length) return '<p class="detail-empty">Aucune tâche.</p>';
+  return items.map(t => {
+    if (t._courrier) {
+      const dl = t._dl;
+      const lbl = dl === null ? 'sans échéance' : (dl < 0 ? `retard ${-dl}j` : dl === 0 ? "auj." : `dans ${dl}j`);
+      const clr = t._cls === 'goal-green' ? '#059669' : t._cls === 'goal-orange' ? '#D97706' : '#DC2626';
+      return `<div class="detail-item clickable" onclick="goTab('courriers')" title="Voir les courriers">
+        <div class="detail-icon">📬</div>
+        <div style="flex:1;min-width:0"><div class="detail-name">${t.intitule||'—'} <span style="color:var(--ink3);font-size:11px">· courrier</span></div></div>
+        <div class="detail-pct" style="color:${clr}">${lbl}</div>
+        <div class="detail-go">›</div>
+      </div>`;
+    }
+    const p = t.prog||0; const pct = Math.round(p*100);
+    const cls = progClass(p);
+    const icon = p>=1 ? '✓' : p>0 ? '▶' : '○';
+    const clr = progColor(p);
+    const right = opts.showTime
+      ? `<div class="detail-pct" style="color:var(--purple,#7C3AED)">${fmtDuration(taskTotalMins(t))}</div>`
+      : `<div class="detail-pct" style="color:${clr}">${pct}%</div>`;
+    return `<div class="detail-item clickable" onclick="goToTask(${t.id})" title="Ouvrir dans le Quotidien">
+      <div class="detail-icon ${cls}">${icon}</div>
+      <div style="flex:1;min-width:0">
+        <div class="detail-name">${t.intitule||'—'}</div>
+        <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${clr}"></div></div>
+      </div>
+      ${right}
+      <div class="detail-go">›</div>
+    </div>`;
+  }).join('');
+}
+
+function statsRowHTML(s, items, key, remain) {
+  items = items || [];
+  key = key || ('k' + Math.random().toString(36).slice(2,8));
+  _detailSets[key] = items;
+  const pctClr = s.pct !== null ? progColor(s.pct/100) : 'var(--ink3)';
+  let timeLbl = 'Temps', lblStyle = '';
+  if (remain && remain.goal) {
+    const reste = remain.goal - (s.time || 0);
+    if (reste <= 0) { timeLbl = '✅ atteint'; lblStyle = ' style="color:#059669;font-weight:600"'; }
+    else { timeLbl = 'reste ' + fmtDuration(reste); }
+  }
+  return `<div class="stats-row" style="margin-bottom:10px">
+    <div class="stat-mini clickable" onclick="toggleStatDetail(event,'${key}','total')"><div class="stat-mini-val blue">${s.total||'0'}</div><div class="stat-mini-lbl">Total</div></div>
+    <div class="stat-mini clickable" onclick="toggleStatDetail(event,'${key}','done')"><div class="stat-mini-val green">${s.done||'0'}</div><div class="stat-mini-lbl">Faites</div></div>
+    <div class="stat-mini clickable" onclick="toggleStatDetail(event,'${key}','ongoing')"><div class="stat-mini-val amber">${s.ongoing||'0'}</div><div class="stat-mini-lbl">En cours</div></div>
+    <div class="stat-mini clickable" onclick="toggleStatDetail(event,'${key}','pct')"><div class="stat-mini-val" style="color:${pctClr}">${s.pct !== null ? s.pct+'%' : '—'}</div><div class="stat-mini-lbl">% Fait</div></div>
+    <div class="stat-mini clickable" onclick="toggleStatDetail(event,'${key}','time')"><div class="stat-mini-val purple">${fmtDuration(s.time)}</div><div class="stat-mini-lbl"${lblStyle}>${timeLbl}</div></div>
+  </div>
+  <div class="stat-detail" id="sd-${key}">${detailHTML(items)}</div>`;
+}
+
+const _detailSets = {};
+function toggleStatDetail(event, key, kind) {
+  if (event) event.stopPropagation();
+  const cont = document.getElementById('sd-' + key);
+  if (!cont) return;
+  const items = _detailSets[key] || [];
+  if (cont.dataset.kind === kind) {        // re-clic sur le même filtre → on remet tout
+    cont.dataset.kind = '';
+    cont.innerHTML = detailHTML(items);
+    return;
+  }
+  cont.dataset.kind = kind;
+  let list = items, showTime = false;
+  if (kind === 'done')          list = items.filter(t => (t.prog||0) >= 1);
+  else if (kind === 'ongoing')  list = items.filter(t => (t.prog||0) > 0 && (t.prog||0) < 1);
+  else if (kind === 'time')   { showTime = true; list = items.filter(t => taskTotalMins(t) > 0); }
+  cont.innerHTML = detailHTML(list, {showTime});
+}
+
+// ── Objectifs temps ── 2h30/sem = 150mn | 10h/mois = 600mn ──────────────────
+const GOAL_WEEK = 150, GOAL_MONTH = 600;
+function timeGoalClass(minutes, isWeekly) {
+  if (!minutes) return '';
+  if (isWeekly) {
+    if (minutes >= 150) return 'goal-green';        // ≥ 2h30  → vert foncé
+    if (minutes >= 120) return 'goal-greenlight';   // 2h00–2h29 → vert clair
+    if (minutes >= 60)  return 'goal-orange';       // 1h00–1h59 → orange
+    return 'goal-red';                              // < 1h    → rouge
+  } else {
+    if (minutes >= 600) return 'goal-green';        // ≥ 10h   → vert foncé
+    if (minutes >= 480) return 'goal-greenlight';   // 8h–9h59  → vert clair
+    if (minutes >= 240) return 'goal-orange';       // 4h–7h59  → orange
+    return 'goal-red';                              // < 4h    → rouge
+  }
+}
+
+// Décompte : période en cours → reste / validé ; période passée → temps réellement fait
+function goalBadge(time, goal, isCurrent, bankAvail) {
+  time = time || 0;
+  const reste = goal - time;
+  if (isCurrent) {
+    if (reste <= 0) return `<div class="goal-line"><span class="goal-badge ok">✅ objectif validé · ${fmtDuration(time)}</span></div>`;
+    let cover = '';
+    if (bankAvail && bankAvail > 0) {
+      const c = Math.min(bankAvail, reste);
+      cover = ` <span class="goal-cover">· ${fmtDuration(c)} en réserve 🏦</span>`;
+    }
+    return `<div class="goal-line"><span class="goal-badge todo">⏳ il reste ${fmtDuration(reste)} sur ${fmtDuration(goal)}${cover}</span></div>`;
+  }
+  if (reste <= 0) return `<div class="goal-line"><span class="goal-badge ok">✅ ${fmtDuration(time)} faites · objectif atteint</span></div>`;
+  return `<div class="goal-line"><span class="goal-badge miss">${fmtDuration(time)} faites · objectif ${fmtDuration(goal)}</span></div>`;
+}
+
+// ── Render Hebdo ──────────────────────────────────────────────────────────────
+function renderHebdo() {
+  const el = document.getElementById('hebdo-list');
+  const year = TODAY.getFullYear();
+  const curWk = getISOWeek(TODAY);
+  let html = '';
+
+  for (let wk = 1; wk <= 52; wk++) {
+    const {mon, sun} = getWeekRange(year, wk);
+    const items = getUnique(mon, sun);
+    // Afficher uniquement les semaines avec données ou proches d'aujourd'hui
+    if (!items.length && wk < curWk - 1) continue;
+    if (!items.length && wk > curWk + 8) continue;
+    const s = periodStats(items, mon, sun);
+    const isCur = wk === curWk;
+    const pctClr = s.pct !== null ? progColor(s.pct/100) : 'var(--ink3)';
+    const uid = `w${wk}`;
+
+    const goalCls = timeGoalClass(s.time, true);
+
+    html += `<div class="period-card">
+      <div class="period-header${isCur?' current':''} ${goalCls}" onclick="toggleBody('${uid}')">
+        <div class="period-label">
+          S${String(wk).padStart(2,'0')}
+          ${isCur ? '<span class="period-badge">Maintenant</span>' : ''}
+          <span style="font-size:11px;font-weight:400;color:var(--ink3);font-family:'DM Mono',monospace">
+            ${mon.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})} – ${sun.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})}
+          </span>
+        </div>
+        <div class="period-stats">
+          <div class="period-stat"><div class="period-stat-val blue">${s.total||'0'}</div><div class="period-stat-lbl">tâches</div></div>
+          <div class="period-stat"><div class="period-stat-val" style="color:${pctClr}">${s.pct !== null ? s.pct+'%' : '—'}</div><div class="period-stat-lbl">fait</div></div>
+          <div class="period-stat"><div class="period-stat-val purple">${fmtDuration(s.time)}</div><div class="period-stat-lbl">temps</div></div>
+        </div>
+      </div>
+      <div class="period-body${isCur?' open':''}" id="${uid}">
+        ${statsRowHTML(s, items, uid)}
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html || '<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Ajoutez des tâches dans le Quotidien</div></div>';
+}
+
+// ── Render Mensuel ────────────────────────────────────────────────────────────
+function renderMensuel() {
+  const el = document.getElementById('mensuel-list');
+  const year = TODAY.getFullYear();
+  const curMo = TODAY.getMonth();
+  let html = '';
+
+  for (let mo = 0; mo < 12; mo++) {
+    const from = new Date(year, mo, 1);
+    const to = new Date(year, mo+1, 0);
+    const items = getUnique(from, to);
+    if (!items.length && mo < curMo - 1) continue;
+    if (!items.length && mo > curMo + 3) continue;
+    const s = periodStats(items, from, to);
+    const isCur = mo === curMo;
+    const pctClr = s.pct !== null ? progColor(s.pct/100) : 'var(--ink3)';
+    const uid = `m${mo}`;
+
+    const mGoalCls = timeGoalClass(s.time, false);
+
+    html += `<div class="period-card">
+      <div class="period-header${isCur?' current':''} ${mGoalCls}" onclick="toggleBody('${uid}')">
+        <div class="period-label">
+          ${MOIS_FR[mo]} ${year}
+          ${isCur ? '<span class="period-badge">Mois courant</span>' : ''}
+        </div>
+        <div class="period-stats">
+          <div class="period-stat"><div class="period-stat-val blue">${s.total||'0'}</div><div class="period-stat-lbl">tâches</div></div>
+          <div class="period-stat"><div class="period-stat-val" style="color:${pctClr}">${s.pct !== null ? s.pct+'%' : '—'}</div><div class="period-stat-lbl">fait</div></div>
+          <div class="period-stat"><div class="period-stat-val purple">${fmtDuration(s.time)}</div><div class="period-stat-lbl">temps</div></div>
+        </div>
+      </div>
+      <div class="period-body${isCur?' open':''}" id="${uid}">
+        ${statsRowHTML(s, items, uid)}
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html || '<div class="empty"><div class="empty-icon">🗓️</div><div class="empty-text">Ajoutez des tâches dans le Quotidien</div></div>';
+}
+
+// ── Régularité / série hebdomadaire ───────────────────────────────────────────
+function weekMondayOf(d) {
+  const x = new Date(d); x.setHours(0,0,0,0);
+  x.setDate(x.getDate() - (x.getDay()+6)%7);   // recule jusqu'au lundi
+  return x;
+}
+function computeStreak() {
+  const GOAL = GOAL_WEEK, CAP = 600;             // objectif 2h30 ; banque plafonnée à 1 mois (10h)
+  const todayMon = weekMondayOf(TODAY);
+  let earliest = null;
+  for (const t of tasks) {
+    const ds = [t.date].concat((t.history||[]).map(h => h.date)).filter(Boolean);
+    for (const d of ds) { const dt = toDate(d); if (dt && !isNaN(dt) && (!earliest || dt < earliest)) earliest = dt; }
+  }
+  const startMon = earliest ? weekMondayOf(earliest) : new Date(todayMon);
+  const weeks = [];
+  for (let m = new Date(startMon); m <= todayMon; m.setDate(m.getDate()+7)) {
+    const mon = new Date(m);
+    const sun = new Date(m); sun.setDate(sun.getDate()+6); sun.setHours(23,59,59,999);
+    const time = getTotalTime(mon, sun);
+    weeks.push({ mon, sun, wk: getISOWeek(mon), time, met: time >= GOAL });
+  }
+  const cur = weeks.length ? weeks[weeks.length-1] : null;   // semaine en cours = la dernière
+  const completed = weeks.length ? weeks.slice(0, -1) : [];
+  // Banque de temps : le surplus s'accumule (plafond 1 mois), le déficit y puise.
+  // La série tient tant que la banque ne tombe pas dans le rouge.
+  let bank = 0, streak = 0, best = 0;
+  for (const w of completed) {
+    bank += (w.time - GOAL);
+    if (bank >= 0) { bank = Math.min(bank, CAP); streak++; if (streak > best) best = streak; }
+    else { bank = 0; streak = 0; }
+  }
+  const bankAvail = bank;
+  // Semaine en cours (jamais comptée « ratée » tant qu'elle n'est pas finie)
+  let current = streak, currentSafe = false;
+  if (cur) {
+    if (cur.met) { current = streak + 1; currentSafe = true; if (current > best) best = current; }
+    else { currentSafe = bankAvail >= (GOAL - cur.time); }   // couverte par la banque ?
+  }
+  return { current, best, bank: bankAvail, weeks, cur, currentSafe, goal: GOAL, cap: CAP };
+}
+function streakColor(n) { return n >= 3 ? '#059669' : n === 2 ? '#CA8A04' : n === 1 ? '#D97706' : '#DC2626'; }
+function streakWord(n)  { return n >= 3 ? 'belle série' : n === 2 ? 'ça tient' : n === 1 ? "c'est lancé" : 'à relancer'; }
+
+// ── Progression réelle (tâches terminées) : tendance + série ──────────────────
+// Date où une tâche a atteint 100 % (reconstruite depuis le journal, sinon sa date)
+function taskCompletionDate(t) {
+  if ((t.prog||0) < 1) return null;
+  if (Array.isArray(t.history)) {
+    const hit = t.history.filter(h => (h.pct||0) >= 100 && h.date).sort((a,b) => toDate(a.date)-toDate(b.date))[0];
+    if (hit) return hit.date;
+  }
+  return t.date || null;
+}
+function computeProgress() {
+  const comps = tasks.map(taskCompletionDate).filter(Boolean).map(d => toDate(d));
+  const curMon = weekMondayOf(TODAY);
+  const weekCount = (mon) => {
+    const sun = new Date(mon); sun.setDate(sun.getDate()+6); sun.setHours(23,59,59,999);
+    return comps.filter(d => d >= mon && d <= sun).length;
+  };
+  const thisW = weekCount(curMon);
+  const lastMon = new Date(curMon); lastMon.setDate(lastMon.getDate()-7);
+  const lastW = weekCount(lastMon);
+  const dir = thisW > lastW ? 'up' : thisW < lastW ? 'down' : 'flat';
+  // Aujourd'hui
+  const todayComp = comps.filter(d => d.getTime() === TODAY.getTime()).length;
+  // Série : semaines consécutives avec ≥1 tâche terminée (semaine en cours non pénalisée)
+  let earliest = null;
+  for (const d of comps) if (!earliest || d < earliest) earliest = d;
+  let streak = 0, best = 0;
+  if (earliest) {
+    const startMon = weekMondayOf(earliest);
+    const wcounts = [];
+    for (let m = new Date(startMon); m <= curMon; m.setDate(m.getDate()+7)) wcounts.push(weekCount(new Date(m)));
+    // série en cours en remontant depuis la dernière semaine terminée
+    let i = wcounts.length - 1;
+    if (wcounts[i] >= 1) { streak = 1; i--; } else { i--; }   // semaine en cours : compte si déjà ≥1, sinon en attente
+    for (; i >= 0; i--) { if (wcounts[i] >= 1) streak++; else break; }
+    let run = 0;
+    for (const c of wcounts) { if (c >= 1) { run++; if (run > best) best = run; } else run = 0; }
+  }
+  return { thisW, lastW, dir, todayComp, streak, best };
+}
+
+function goTab(id) {
+  const labels = { dashboard:'Tableau de bord', quotidien:'Quotidien', hebdo:'Hebdomadaire', mensuel:'Mensuel', courriers:'Courriers' };
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => { t.classList.remove('active'); if (t.textContent.trim() === labels[id]) t.classList.add('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ── Render Dashboard ──────────────────────────────────────────────────────────
+function renderDashboard() {
+  const allItems = getUnique(new Date(2000,0,1), new Date(2099,0,1));
+  const pendingC = courriers.filter(c => c.statut === 'En attente');   // en attente = à faire
+  const total = allItems.length + pendingC.length;
+  const done = allItems.filter(t => (t.prog||0) >= 1).length;
+  const ongoing = allItems.filter(t => (t.prog||0) > 0 && (t.prog||0) < 1).length;
+  const pct = total > 0 ? Math.round(done/total*100) : 0;
+  const totalTime = tasks.reduce((s,t) => s+parseDuration(t.duree), 0);
+  const prioH = allItems.filter(t => t.prio === 'H' && (t.prog||0) < 1).length;
+  const pctClr = progColor(pct/100).replace('var(','').replace(')','');
+  const streak = computeStreak();
+  const prog = computeProgress();
+
+  const allUnique = allItems;
+  // Pseudo-éléments pour les courriers en attente (comptent comme « à faire »)
+  const cItems = pendingC.map(c => ({ id: c.id, intitule: c.intitule || '(courrier)', prog: 0, _courrier: true, _cls: courrierGoalClass(c), _dl: courrierDaysLeft(c) }));
+  _detailSets['kpi-total']   = allUnique.concat(cItems);
+  _detailSets['kpi-done']    = allUnique.filter(t => (t.prog||0) >= 1);
+  _detailSets['kpi-ongoing'] = allUnique.filter(t => (t.prog||0) > 0 && (t.prog||0) < 1);
+  _detailSets['kpi-reste']   = allUnique.filter(t => (t.prog||0) < 1).concat(cItems);
+  _detailSets['kpi-time']    = allUnique.filter(t => taskTotalMins(t) > 0);
+  _detailSets['kpi-prioH']   = allUnique.filter(t => t.prio === 'H' && (t.prog||0) < 1);
+
+  const totalSub = pendingC.length ? `${allItems.length} tâches + ${pendingC.length} courrier${pendingC.length>1?'s':''}` : 'tâches uniques';
+
+  document.getElementById('kpi-grid').innerHTML = `
+    <div class="kpi clickable" data-kpi="total" onclick="showKpiDetail('total')"><div class="kpi-label">Total</div><div class="kpi-value blue">${total}</div><div class="kpi-sub">${totalSub}</div></div>
+    <div class="kpi clickable" data-kpi="done" onclick="showKpiDetail('done')"><div class="kpi-label">Terminées</div><div class="kpi-value green">${done}</div><div class="kpi-sub">à 100%</div></div>
+    <div class="kpi clickable" data-kpi="ongoing" onclick="showKpiDetail('ongoing')"><div class="kpi-label">En cours</div><div class="kpi-value amber">${ongoing}</div><div class="kpi-sub">en progression</div></div>
+    <div class="kpi clickable" data-kpi="reste" onclick="showKpiDetail('reste')"><div class="kpi-label">Avancement</div><div class="kpi-value" style="color:${progColor(pct/100)}">${pct}%<span class="prog-arrow ${prog.dir}">${prog.dir==='up'?'▲':prog.dir==='down'?'▼':'→'}</span></div><div class="kpi-sub">${prog.thisW} term. cette sem.${prog.streak>0?' · 🔥'+prog.streak:''}</div></div>
+    <div class="kpi clickable" data-kpi="regul" onclick="showKpiDetail('regul')"><div class="kpi-label">Régularité</div><div class="kpi-value" style="color:${streakColor(streak.current)}">${streak.current}<span style="font-size:.5em;font-weight:500"> sem.</span></div><div class="kpi-sub">${streakWord(streak.current)}${streak.bank>0?' · 🏦 +'+fmtDuration(streak.bank):' · record '+streak.best}</div></div>
+    <div class="kpi clickable" data-kpi="prioH" onclick="showKpiDetail('prioH')"><div class="kpi-label">Priorité H</div><div class="kpi-value red">${prioH}</div><div class="kpi-sub">urgentes à faire</div></div>
+  `;
+  // réinitialise le panneau de détail à chaque rendu (évite l'affichage périmé)
+  const kd = document.getElementById('kpi-detail');
+  if (kd) { kd.hidden = true; kd.dataset.kind = ''; kd.innerHTML = ''; }
+
+  // Courriers en attente, en évidence sur le tableau de bord (anti-oubli)
+  const dbc = document.getElementById('db-courriers');
+  if (dbc) {
+    const pend = pendingC.slice().sort((a, b) => {
+      if (!a.echeance) return 1; if (!b.echeance) return -1;
+      return toDate(a.echeance) - toDate(b.echeance);
+    });
+    if (!pend.length) { dbc.innerHTML = ''; }
+    else {
+      const rows = pend.map(c => {
+        const cls = courrierGoalClass(c);
+        const dl = courrierDaysLeft(c);
+        const clr = cls === 'goal-green' ? '#059669' : cls === 'goal-orange' ? '#D97706' : '#DC2626';
+        const lbl = dl === null ? 'sans échéance' : (dl < 0 ? `en retard ${-dl}j` : dl === 0 ? "aujourd'hui" : `dans ${dl}j`);
+        return `<div class="dbc-item ${cls}" onclick="goTab('courriers')" title="Aller aux courriers">
+          <span class="dbc-name">${(c.intitule||'(courrier)').replace(/</g,'&lt;')}</span>
+          <span class="dbc-ech" style="color:${clr}">${lbl}</span>
+          <span class="dbc-go">›</span>
+        </div>`;
+      }).join('');
+      dbc.innerHTML = `<div class="dbc-card">
+        <div class="dbc-title">📬 Courriers en attente <span class="dbc-count">${pend.length}</span></div>
+        ${rows}
+      </div>`;
+    }
+  }
+
+  const curWk = getISOWeek(TODAY);
+  const {mon, sun} = getWeekRange(TODAY.getFullYear(), curWk);
+  const wItems = getUnique(mon, sun);
+  const wS = periodStats(wItems, mon, sun);
+  document.getElementById('week-label').textContent =
+    `S${String(curWk).padStart(2,'0')} · ${mon.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})}–${sun.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})}`;
+  document.getElementById('db-week').innerHTML = statsRowHTML(wS, wItems, 'dbweek', {goal: GOAL_WEEK});
+
+  const curMo = TODAY.getMonth();
+  const mFrom = new Date(TODAY.getFullYear(), curMo, 1);
+  const mTo = new Date(TODAY.getFullYear(), curMo+1, 0);
+  const mItems = getUnique(mFrom, mTo);
+  const mS = periodStats(mItems, mFrom, mTo);
+  document.getElementById('month-label').textContent = `${MOIS_FR[curMo]} ${TODAY.getFullYear()}`;
+  document.getElementById('db-month').innerHTML = statsRowHTML(mS, mItems, 'dbmonth', {goal: GOAL_MONTH});
+}
+
+// ── Tabs & Accordion ──────────────────────────────────────────────────────────
+function showKpiDetail(kind) {
+  const cont = document.getElementById('kpi-detail');
+  if (!cont) return;
+  if (!cont.hidden && cont.dataset.kind === kind) {   // re-clic → on referme
+    cont.hidden = true; cont.dataset.kind = '';
+    document.querySelectorAll('.kpi').forEach(k => k.classList.remove('active'));
+    return;
+  }
+  if (kind === 'regul') {
+    const st = computeStreak();
+    const recent = st.weeks.slice(-8).reverse();
+    const bankTxt = st.bank > 0
+      ? `<span class="bank-pos">🏦 ${fmtDuration(st.bank)} d'avance en banque</span> · couvre une semaine creuse`
+      : `<span class="bank-zero">🏦 banque vide</span> · chaque 2h30 hebdo la remplit`;
+    const bankLine = `<div class="bank-line">${bankTxt}</div>`;
+    const list = recent.length
+      ? recent.map(w => {
+          const col = w.met ? '#059669' : (w.time >= 60 ? '#D97706' : '#DC2626');
+          const dot = w.met ? '🟢' : (w.time >= 60 ? '🟠' : '🔴');
+          const isCur = w.mon.getTime() === weekMondayOf(TODAY).getTime();
+          return `<div class="detail-item clickable" onclick="goTab('hebdo')" title="Voir l'Hebdomadaire">
+            <div style="flex:1;min-width:0">
+              <div class="detail-name">S${String(w.wk).padStart(2,'0')}${isCur?' · en cours':''} · ${w.mon.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})}–${w.sun.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})}</div>
+            </div>
+            <div class="detail-pct" style="color:${col}">${fmtDuration(w.time)} ${dot}</div>
+            <div class="detail-go">›</div>
+          </div>`;
+        }).join('')
+      : '<p class="detail-empty">Pas encore de semaines enregistrées.</p>';
+    cont.innerHTML = bankLine + list;
+    cont.hidden = false; cont.dataset.kind = kind;
+    document.querySelectorAll('.kpi').forEach(k => k.classList.toggle('active', k.dataset.kpi === kind));
+    return;
+  }
+  const items = _detailSets['kpi-' + kind] || [];
+  cont.innerHTML = detailHTML(items, {showTime: kind === 'time'});
+  cont.hidden = false;
+  cont.dataset.kind = kind;
+  document.querySelectorAll('.kpi').forEach(k => k.classList.toggle('active', k.dataset.kpi === kind));
+}
+
+// Saute à une tâche précise dans le Quotidien, la fait défiler et la surligne
+function goToTask(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.remove('active');
+    if (t.textContent.trim() === 'Quotidien') t.classList.add('active');
+  });
+  document.getElementById('quotidien').classList.add('active');
+  setTimeout(() => {
+    const row = document.getElementById('task-' + id);
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
+      setTimeout(() => row.classList.remove('flash'), 1800);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, 60);
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function toggleBody(uid) {
+  const el = document.getElementById(uid);
+  if (el) el.classList.toggle('open');
+}
+
+// ── Export ────────────────────────────────────────────────────────────────────
+function exportData() {
+  const blob = new Blob([JSON.stringify(tasks, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `suivi-admin-${todayLocal()}.json`;
+  a.click();
+  toast('Export téléchargé');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+function renderAll() {
+  const _sy = window.scrollY || window.pageYOffset || 0;   // mémorise la position
+  renderQuotidien();
+  renderHebdo();
+  renderMensuel();
+  renderCourriers();
+  renderDashboard();
+  if (_sy) window.scrollTo(0, _sy);                         // restaure la position
+}
+
+document.getElementById('today-label').textContent = TODAY.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+renderAll();
+startSync();
+</script>
+</body>
+</html>
